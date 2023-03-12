@@ -4,12 +4,41 @@ from werkzeug.utils import secure_filename
 import csv
 import os
 
-@api.route('/profile', methods=['POST'])
+import logging
+
+UPLOAD_FOLDER = '.'
+# app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+@api.route('/upload', methods=['POST'])
+def upload():
+    target=os.path.join(UPLOAD_FOLDER,'test_docs')
+    if not os.path.isdir(target):
+        os.mkdir(target)
+    # logger.info("welcome to upload`")
+    file = request.files['file'] 
+
+    # reader = csv.reader(file)
+    # print(csv_reader)
+    filename ="ssss.csv"
+    destination="/".join([target, filename])
+    file.save(destination)
+    
+    # session['uploadFilePath']=destination
+    response="Whatever you wish too return"
+    return response
+
+
+
+@api.route('/profile', methods=['POST',"GET"])
 def my_profile():
+    return "Hello World"
+    print('Loading')
     response_body ={}
     if request.method == 'POST':
+        print('Loading')
+
+
         if request.files:
-            print('Loading')
             uploaded_file = request.files['filename'] # This line uses the same variable and worked fine
             uploaded_file.save(os.path.join(app.config['FILE_UPLOADS'], uploaded_file.filename))
             f = request.form['filename'] # This is the line throwing the error
@@ -18,6 +47,7 @@ def my_profile():
                 for row in csv_file:
                     data.append(row)
                     print(row)
+
 
 
         # # request.form.get('name')
@@ -33,6 +63,8 @@ def my_profile():
         #     "name": "Anirudh",
         #     "about" :"Hello! I'm a full stack developer that loves python and javascript"
         # }
+
+
         return "ok"
         
     elif request.method == 'GET':
