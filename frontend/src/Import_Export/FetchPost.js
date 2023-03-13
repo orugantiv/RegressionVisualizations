@@ -1,9 +1,11 @@
-export default async function FetchPost(url = "", data = {}) {
+export default async function FetchPost(url = "", data={} ) {
 
 
     // Default options are marked with *
     const formData = new FormData();
-    data.map((value, key) => { formData.append(key, value); });
+
+    Object.entries(data).forEach(([value, key]) => {
+      formData.append(key, value);});
 
     const response = await fetch(url, {
       method: "POST", // *GET, POST, PUT, DELETE, etc.

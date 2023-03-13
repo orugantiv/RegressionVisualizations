@@ -3,30 +3,35 @@ api = Flask(__name__)
 from werkzeug.utils import secure_filename
 import csv
 import os
-
 import logging
+import pandas as pd
+import json
 
 UPLOAD_FOLDER = '.'
+Global_Session_ID = ""
+
 # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-@api.route('/upload', methods=['POST'])
-def upload():
+@api.route('/upload_data', methods=['POST'])
+def uploadData():
+    global Global_Session_ID
+
     target=os.path.join(UPLOAD_FOLDER,'test_docs')
     if not os.path.isdir(target):
         os.mkdir(target)
-    # logger.info("welcome to upload`")
     file = request.files['file'] 
-
-    # reader = csv.reader(file)
-    # print(csv_reader)
-    filename ="ssss.csv"
+    filename =request.form['filename']
+    Global_Session_ID = (filename)
+    filename +='.csv' 
     destination="/".join([target, filename])
     file.save(destination)
-    
-    # session['uploadFilePath']=destination
-    response="Whatever you wish too return"
-    return response
+    dataset=pd.DataFrame(pd.read_csv(destination))
+    dataset_json=dataset.to_json(orient='records')
+    return json.dumps(dataset_json)
 
+@api.route('/currentSessionKey', methods=['GET'])
+def currentSessionKey():
+    return json.dumps(Global_Session_ID)
 
 
 @api.route('/profile', methods=['POST',"GET"])
@@ -74,3 +79,4 @@ def my_profile():
         }
     return response_body
 
+ 

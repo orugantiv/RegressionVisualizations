@@ -1,9 +1,9 @@
 import React from 'react';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Papa from "papaparse";
 import { Input, Button } from '@mui/material';
-import DataTable from '../Tables/DataTable';
-import FetchPost from './FetchPost';
+import DataTable from '../Pages/Summary/DataTable';
+import Plot from 'react-plotly.js';
 
 
 export default function ImportExport() {
@@ -36,60 +36,47 @@ export default function ImportExport() {
 
       },
     });
-    const data = new FormData();
-    data.append('file', files);
-    data.append('filename', "test");
-    fetch('upload', {
-      method: 'POST',
-      body: data,
-    })
-
-
-    // .then((response) => {
-    //   response.json().then((body) => {
-    //     this.setState({ imageURL: `${body.file}` });
-    //   });
-    // });
-
-    // FetchPost("/upload", JSON.stringify(files)).then((data) => {
-    //     console.log(data); // JSON data parsed by `data.json()` call
-    //   });
-
-    // const formData = new FormData();
-    // formData.append("file", files);
-    // formData.append('filename', this.fileName.value);
-    // console.log(formData)
-    // fetch(
-    //   "/upload", {
-    //   method: "POST",
-    //   body: formData
-    // }
-    // )
-
-    
   };
 
-  const data = new FormData();
-  data.append('file', files);
-  data.append('filename', "test");
-  fetch('upload', {
-    method: 'POST',
-    body: data,
-  })
+  console.log('RowArray', tableRows);
+  console.log('ValuesArray', values);
+
+  const updateDatasetHandler = () => {
+    console.log("gello");
+    fetch('/currentSessionKey', {
+      method: 'GET',
+    }).then((response) => {
+      console.log(response.json())
+    });
+
+  }
+
+  // useEffect(() => {
+  //   const data = new FormData();
+  //   data.append('file', files);
+  //   data.append('filename', localStorage.getItem('mysessionid'));
+  //   fetch('/upload_data', {
+  //     method: 'POST',
+  //     body: data,
+  //   }).then((response) => {
+  //     console.log(response.json())
+  //   });
+  // });
+
+
   return (
     <div>
       <Input
         type="file"
         name="file"
-        // ref={(ref) => { this.uploadInput = ref; }}
         onChange={changeHandler}
         inputProps={{ accept: '.csv' }}
         style={{ display: "block" }}
         sx={{ width: '12.5%', overflow: 'hidden', padding: 2 }}
-
       />
-      {/* <input ref={(ref) => { this.uploadInput = ref; }} onChange={changeHandler} type="file" /> */}
       <DataTable parsedData={parsedData} tableRows={tableRows} values={values} />
+
+
     </div>
   );
 }

@@ -23,7 +23,7 @@ export default function DataTable(props) {
     };
 
     return (
-        <Paper sx={{ width: '50%', overflow: 'hidden', padding: 2 }}>
+        <Paper sx={{ width: '95%', overflow: 'hidden', justifyContent: 'center', alignItems: 'center'      }}>
             <TableContainer sx={{ maxHeight: 440 }}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
